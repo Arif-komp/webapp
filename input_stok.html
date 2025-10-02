@@ -10,6 +10,7 @@
         body {
             font-family: 'Poppins', sans-serif;
             background-color: #f4f7fa;
+            /* Tambahkan padding-top agar konten tidak tertutup header */
             padding-top: 5rem; 
         }
         .form-container {
@@ -33,6 +34,32 @@
             transform: translateY(-2px);
             box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
         }
+        /* Style untuk hamburger menu */
+        .mobile-menu {
+            transition: max-height 0.3s ease-in-out, opacity 0.3s ease-in-out;
+            overflow: hidden;
+            max-height: 0;
+            opacity: 0;
+        }
+        .mobile-menu.open {
+            max-height: 500px; 
+            opacity: 1;
+        }
+        /* Styling untuk Spinner/Loader */
+        .loader-icon {
+            border: 2px solid #f3f3f3;
+            border-top: 2px solid #3498db;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            animation: spin 2s linear infinite;
+            display: inline-block;
+            vertical-align: middle;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
     </style>
 </head>
 <body>
@@ -43,15 +70,35 @@
                 <div class="flex items-center">
                     <a href="dashboard.html" class="text-2xl font-extrabold text-indigo-600 tracking-wider transition duration-300 hover:text-indigo-800">Gudang.app</a>
                 </div>
-                <div class="flex items-center space-x-4">
+                
+                <div class="hidden sm:flex items-center space-x-4">
                     <a href="dashboard.html" class="text-gray-600 hover:bg-indigo-100 px-3 py-2 rounded-xl text-sm font-medium transition duration-200">Dashboard</a>
                     <a href="input_stok.html" class="bg-indigo-600 text-white px-3 py-2 rounded-xl text-sm font-semibold shadow-md transition duration-200" aria-current="page">Input Stok</a>
                     <a href="fisik_fancing.html" class="text-gray-600 hover:bg-indigo-100 px-3 py-2 rounded-xl text-sm font-medium transition duration-200">Fisik Fancing</a>
                     <button onclick="logoutRedirect()" class="bg-red-500 hover:bg-red-600 text-white px-3 py-2 rounded-xl text-sm font-semibold transition duration-150 shadow-md">Logout</button>
                 </div>
+                
+                <div class="sm:hidden flex items-center">
+                    <button id="hamburger-btn" class="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-white hover:bg-indigo-600 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white">
+                        <svg id="icon-open" class="block h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+                        </svg>
+                        <svg id="icon-close" class="hidden h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                    </button>
+                </div>
             </div>
         </nav>
+        
+        <div id="mobile-menu" class="mobile-menu sm:hidden px-2 pt-2 pb-3 space-y-1 bg-white shadow-xl">
+            <a href="dashboard.html" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-indigo-50 hover:text-indigo-700">Dashboard</a>
+            <a href="input_stok.html" class="block px-3 py-2 rounded-md text-base font-medium bg-indigo-50 text-indigo-700">Input Stok</a>
+            <a href="fisik_fancing.html" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-indigo-50 hover:text-indigo-700">Fisik Fancing</a>
+            <button onclick="logoutRedirect()" class="w-full text-left bg-red-500 hover:bg-red-600 text-white px-3 py-2 rounded-md text-base font-semibold transition duration-150 mt-2">Logout</button>
+        </div>
     </header>
+
 
     <div class="max-w-xl mx-auto mb-10 bg-white p-6 md:p-10 rounded-2xl shadow-2xl form-container">
         <h1 class="text-3xl font-bold text-center text-gray-800 mb-2">📥 Form Input Stok</h1>
@@ -70,8 +117,8 @@
             </div>
 
             <div id="conditionalFilters" class="mb-5 hidden p-4 bg-indigo-50 rounded-xl border border-indigo-100">
-                <div id="locationInput" class="mb-4">
-                    <label for="lokasi" class="block text-sm font-semibold text-gray-700 mb-2">Lokasi (Khusus PIPA GALV KOTAK)</label>
+                <div id="locationInput" class="mb-4 hidden">
+                    <label for="lokasi" class="block text-sm font-semibold text-gray-700 mb-2">Lokasi (Wajib diisi)</label>
                     <input type="text" id="lokasi" placeholder="Masukkan Kode/Nama Lokasi"
                         class="input-field w-full p-3 border border-gray-300 rounded-xl focus:ring-1">
                 </div>
@@ -91,24 +138,24 @@
 
             <div class="mb-5">
                 <label for="jumlah" class="block text-sm font-semibold text-gray-700 mb-2">Jumlah (Masuk/Keluar)</label>
-                <input type="number" id="jumlah" name="jumlah" required min="1" placeholder="Masukkan Jumlah Stok"
+                <input type="number" id="jumlah" name="jumlah" required min="1" placeholder="Masukkan Jumlah"
                     class="input-field w-full p-3 border border-gray-300 rounded-xl focus:ring-1">
             </div>
 
             <div class="mb-8">
                 <label for="checker" class="block text-sm font-semibold text-gray-700 mb-2">Checker</label>
-                <input type="text" id="checker" name="checker" required placeholder="Nama Checker"
+                <input type="text" id="checker" name="checker" required placeholder="Checker"
                     class="input-field w-full p-3 border border-gray-300 rounded-xl focus:ring-1">
             </div>
 
             <div class="flex flex-col sm:flex-row gap-4">
                 <button type="button" id="btnBarangMasuk" data-type="masuk"
                     class="btn-action w-full sm:w-1/2 bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-4 rounded-xl focus:ring-4 focus:ring-green-500/50">
-                    <span id="loadingMasuk" class="hidden spinner-border spinner-border-sm mr-2"></span> Barang Masuk (IN)
+                    <span id="loadingMasuk" class="hidden loader-icon mr-2"></span> Barang Masuk
                 </button>
                 <button type="button" id="btnBarangKeluar" data-type="keluar"
                     class="btn-action w-full sm:w-1/2 bg-red-600 hover:bg-red-700 text-white font-bold py-3 px-4 rounded-xl focus:ring-4 focus:ring-red-500/50">
-                    <span id="loadingKeluar" class="hidden spinner-border spinner-border-sm mr-2"></span> Barang Keluar (OUT)
+                    <span id="loadingKeluar" class="hidden loader-icon mr-2"></span> Barang Keluar
                 </button>
             </div>
 
@@ -118,7 +165,7 @@
         </form>
     </div>
 
-    <script>
+        <script>
         // --- Session Check & Logout (Diulang di semua halaman non-index) ---
         const STORAGE_KEY = 'user_session_approved';
 
@@ -132,292 +179,352 @@
             localStorage.removeItem(STORAGE_KEY);
             window.location.href = 'index.html';
         }
+        
+        // --- Hamburger Menu Logic ---
+        const btnH = document.getElementById('hamburger-btn');
+        const menuH = document.getElementById('mobile-menu');
+        const iconOpenH = document.getElementById('icon-open');
+        const iconCloseH = document.getElementById('icon-close');
 
-        document.addEventListener('DOMContentLoaded', checkSessionAccess);
+        btnH.addEventListener('click', () => {
+            menuH.classList.toggle('open');
+            iconOpenH.classList.toggle('hidden');
+            iconCloseH.classList.toggle('hidden');
+        });
         // --- End Session Check ---
 
-        // --- Sisanya adalah kode JavaScript untuk Form Input ---
-        const PRODUCT_DATA = { /* ... (PRODUCT_DATA sama dengan kode sebelumnya) */
-            "KAWAT BETON": {
-                form_url: "https://docs.google.com/forms/u/0/d/e/1FAIpQLScvETNjdJnC9ZiFSsgRx5zP2dit95j_0Y4NzyqccCRf-Sl47Q/formResponse",
-                entry: { nama_produk: "entry.566128663", 
-                        masuk: "entry.969048917", 
-                        keluar: "entry.1223821394", 
-                        checker: "entry.843098471", 
-                        lokasi: "entry.5555551" },
-                products: [ "KAWAT 6 (ENAM)","KAWAT 8 (DELAPAN)","KAWAT 10 (SEPULUH)","KAWAT 12 (DUA BELAS)","KAWAT 4.7 X 12","KAWAT 8.4 X 12","KAWAT 22 ( DUA PULUH DUA ) ULIR","KAWAT 19 ( SEMBILAN BELAS ) ULIR","KAWAT 25 ( DUA PULUH LIMA ) ULIR","KAWAT 13 (TIGA BELAS) ULIR","KAWAT 7.1 X 12","KAWAT 16 (ENAM BELAS)","KAWAT 16 ( ENAM BELAS ) ULIR","KAWAT 14 (EMPAT BELAS)","KAWAT 11.4 X 12","KAWAT 10 ( SEPULUH ) ULIR" ]
-            },
-            "SEMEN": {
-                form_url: "https://docs.google.com/forms/u/0/d/e/1FAIpQLSfLiOefYM1lh94iVd2QhLqYrP7emz8XaNJfF1xaGQJefzBk5A/formResponse",
-                entry: { nama_produk: "entry.152178025", 
-                        masuk: "entry.1621335854", 
-                        keluar: "entry.741061137", 
-                        checker: "entry.1328592234", 
-                        lokasi: "entry.5555552" },
-                products: [ "SEMEN TIGA RODA 50 KG","SEMEN TONASA 50 KG","SEMEN PUTIH JAGUAR 40 KG","SB PEREKAT BATA RINGAN 40 KG" ]
-            },
-            "BWG - KAWAT DURI": {
-                form_url: "https://docs.google.com/forms/u/0/d/e/1FAIpQLSf5uS3Q2V-KBX7-X-KjTz6E/formResponse",
-                entry: { nama_produk: "entry.1111113", 
-                        masuk: "entry.2222223", 
-                        keluar: "entry.3333333", 
-                        checker: "entry.4444443", 
-                        lokasi: "entry.5555553" },
-                products: [ "BENDRAT PUTIH ROL (25 KG)", "KAWAT DURI (5 KG)", "KAWAT DURI (10 KG)" ]
-            },
-            "PIPA GALV KOTAK": {
-                form_url: "https://docs.google.com/forms/u/0/d/e/1FAIpQLSf6g4_4b5i1sFfQkQ6rT3Q2V-K_KjTz6E/formResponse",
-                entry: { nama_produk: "entry.6666664", 
-                        masuk: "entry.7777774", 
-                        keluar: "entry.8888884", 
-                        checker: "entry.9999994", 
-                        lokasi: "entry.561578500" },
-                products: [ "PIPA KOTAK GALV 1/2 X 1.2 MM", "PIPA KOTAK GALV 3/4 X 1.2 MM", "PIPA KOTAK GALV 1 X 1.2 MM" ]
-            },
-            "ATAP": {
-                form_url: "https://docs.google.com/forms/u/0/d/e/1FAIpQLSf7w7a-dE_zH_6iG7KjTz6E/formResponse",
-                entry: { nama_produk: "entry.1111115", 
-                        masuk: "entry.2222225", 
-                        keluar: "entry.3333335", 
-                        checker: "entry.4444445", 
-                        lokasi: "entry.5555555" },
-                products: [ "ATAP SENG GELOMBANG L 80", "ATAP SENG GELOMBANG L 90", "ATAP SENG GELOMBANG L 100" ]
-            },
-            "BAJA RINGAN": {
-                form_url: "https://docs.google.com/forms/u/0/d/e/1FAIpQLSf8x8a-dE_zH_6iG7KjTz6E/formResponse",
-                entry: { nama_produk: "entry.1111116",
-                        masuk: "entry.2222226", 
-                        keluar: "entry.3333336", 
-                        checker: "entry.4444446", 
-                        lokasi: "entry.5555556" },
-                products: [ "BAJA RINGAN C75.75", "BAJA RINGAN RENG R30" ]
-            },
-            "HOLO": {
-                form_url: "https://docs.google.com/forms/u/0/d/e/1FAIpQLSf9w9a-dE_zH_6iG7KjTz6E/formResponse",
-                entry: { nama_produk: "entry.1111117", 
-                        masuk: "entry.2222227", 
-                        keluar: "entry.3333337", 
-                        checker: "entry.4444447", 
-                        lokasi: "entry.5555557" },
-                products: [ "HOLO GALV 20X40X0,4", "HOLO GALV 40X40X0,4", "HOLO GALV 40X60X0,4" ]
+        // Data Produk, URL Google Form, dan Entry ID (SANGAT PENTING: GANTI DENGAN ID ASLI ANDA)
+        const PRODUCT_DATA = {
+            "KAWAT BETON": {
+                // Ganti URL ini dengan URL 'formResponse' dari Google Form KAWAT BETON
+                form_url: "https://docs.google.com/forms/u/0/d/e/1FAIpQLScvETNjdJnC9ZiFSsgRx5zP2dit95j_0Y4NzyqccCRf-Sl47Q/formResponse", 
+                entry: {
+                    nama_produk: "entry.566128663", // ID Entry 'Nama Produk'
+                    masuk: "entry.969048917",      // ID Entry 'Masuk/In'
+                    keluar: "entry.1223821394",     // ID Entry 'Keluar/Out'
+                    checker: "entry.843098471",    // ID Entry 'Checker'
+                    lokasi: "entry.5555551"      // ID Entry 'Lokasi' (Jika Ada)
+                },
+                products: [ "KAWAT 6 (ENAM)","KAWAT 8 (DELAPAN)","KAWAT 10 (SEPULUH)","KAWAT 12 (DUA BELAS)","KAWAT 4.7 X 12","KAWAT 8.4 X 12","KAWAT 22 ( DUA PULUH DUA ) ULIR","KAWAT 19 ( SEMBILAN BELAS ) ULIR","KAWAT 25 ( DUA PULUH LIMA ) ULIR","KAWAT 13 (TIGA BELAS) ULIR","KAWAT 7.1 X 12","KAWAT 16 (ENAM BELAS)","KAWAT 16 ( ENAM BELAS ) ULIR","KAWAT 14 (EMPAT BELAS)","KAWAT 11.4 X 12","KAWAT 10 ( SEPULUH ) ULIR" ]
+            },
+            "SEMEN": {
+                form_url: "https://docs.google.com/forms/u/0/d/e/1FAIpQLSfLiOefYM1lh94iVd2QhLqYrP7emz8XaNJfF1xaGQJefzBk5A/formResponse",
+                entry: {
+                    nama_produk: "entry.152178025", 
+                    masuk: "entry.1621335854", 
+                    keluar: "entry.741061137", 
+                    checker: "entry.1328592234", 
+                    lokasi: "entry.5555552"
+                },
+                products: [ "SEMEN TIGA RODA 50 KG","SEMEN TONASA 50 KG","SEMEN PUTIH JAGUAR 40 KG","SB PEREKAT BATA RINGAN 40 KG" ]
+            },
+            "BWG - KAWAT DURI": {
+                form_url: "https://docs.google.com/forms/d/e/1FAIpQLSf5uS3Q2V-KBX-34567/formResponse",
+                entry: {
+                    nama_produk: "entry.1111113", 
+                    masuk: "entry.2222223", 
+                    keluar: "entry.3333333", 
+                    checker: "entry.4444443", 
+                    lokasi: "entry.5555553"
+                },
+                products: [ "BENDRAT PUTIH ROL (25 KG)","BENDRAT HITAM ROL (20KG)","BWG 12","BWG 14","BWG 16","BWG 6","BWG 10","BWG 8","KAWAT DURI BIASA","KAWAT DURI 100M (ANTI KARAT)","LIS KAYU 4X4","BENDRAT STIK 20 KG","Razor" ]
+            },
+            "GALVALUM - BONDEX": {
+                form_url: "https://docs.google.com/forms/d/e/1FAIpQLSczD2h1E-KBX-23456/formResponse",
+                entry: {
+                    nama_produk: "entry.1111114", 
+                    masuk: "entry.2222224", 
+                    keluar: "entry.3333334", 
+                    checker: "entry.4444444", 
+                    lokasi: "entry.5555554"
+                },
+                products: [
+                    { name: "GALVALUM SOLID (0.3) 4 METER", filter: "4 meter" },
+                    { name: "GALVALUM KENCANA (0.3) 5 METER", filter: "5 meter" },
+                    { name: "GALVALUM KENCANA (0.25) 6 METER", filter: "6 meter" },
+                    { name: "GALVALUM KENCANA (0.3) 7 METER", filter: "7 meter" },
+                    { name: "GALVALUM KENCANA (0.25) 8 METER", filter: "8 meter" }
+                ],
+                filters: ["4 meter", "5 meter", "6 meter", "7 meter", "8 meter"],
+                filter_key: 'length'
+            },
+            "BAJA RINGAN - HOLO": {
+                form_url: "https://docs.google.com/forms/d/e/1FAIpQLScyW6j6E-KBX-12345/formResponse",
+                entry: {
+                    nama_produk: "entry.1111115", 
+                    masuk: "entry.2222225", 
+                    keluar: "entry.3333335", 
+                    checker: "entry.4444445", 
+                    lokasi: "entry.5555555"
+                },
+                products: [ "BAJA RINGAN KANAL KENCANA C 75 (0.70)","BAJA RINGAN KANAL KENCANA C 75 (0.75)","BAJA RINGAN KANAL S C 75","BAJA RINGAN KANAL SOLID KENCANA C 75 (0.75)","BAJA RINGAN RENG KENCANA 0.40","BAJA RINGAN RENG S 0.40","HOLO PLAFON 14X36 (0.25) KENCANA","HOLO PLAFON 36X36 (0.25) KENCANA","HOLO PLAFON 15X30 (0.25) S MINI","HOLO PLAFON 30X30 (0.25) S MINI","HOLO PLAFON 16X34 (0.25) S","HOLO PLAFON 33X36 (0.25) S", ]
+            },
+            "PIPA GALV KOTAK": {
+                form_url: "https://docs.google.com/forms/d/e/1FAIpQLSd9tK8Y0-KBX-09876/formResponse",
+                entry: {
+                    nama_produk: "entry.1111116", 
+                    masuk: "entry.2222226", 
+                    keluar: "entry.3333336", 
+                    checker: "entry.4444446", 
+                    lokasi: "entry.5555556"
+                },
+                products: [
+                    { name: "PIPA GALV KOTA 30X30 BIRU", filter: "BIRU" },
+                    { name: "PIPA GALV KOTA 30X40 PUTIH", filter: "PUTIH" },
+                    { name: "PIPA GALV KOTA 30X35 UNGU", filter: "UNGU" },
+                    { name: "PIPA GALV KOTA 10X32 HITAM", filter: "HITAM" },
+                    { name: "PIPA GALV KOTA 30X30 HIJAU", filter: "HIJAU" }
+                ],
+                filters: ["BIRU", "PUTIH", "UNGU", "HITAM", "HIJAU"],
+                filter_key: 'color'
+            }
+        };
+
+        let selectedFilter = null; // Menyimpan filter yang sedang aktif (untuk Galvalum/Pipa)
+
+        const $ = id => document.getElementById(id); // Fungsi shorthand untuk getElementById
+
+        // Elemen DOM
+        const jenisProdukSelect = $('jenisProduk');
+        const namaProdukSelect = $('namaProduk');
+        const conditionalFiltersDiv = $('conditionalFilters');
+        const filterButtonsDiv = $('filterButtons');
+        const locationInputDiv = $('locationInput');
+        const lokasiInput = $('lokasi');
+        const statusMessageDiv = $('statusMessage');
+        const form = $('stockForm');
+
+        /**
+         * Mengisi dropdown Jenis Produk saat halaman dimuat
+         */
+        function initJenisProduk() {
+            const productTypes = Object.keys(PRODUCT_DATA);
+            productTypes.forEach(type => {
+                const option = document.createElement('option');
+                option.value = type;
+                option.textContent = type;
+                jenisProdukSelect.appendChild(option);
+            });
+        }
+
+        /**
+         * Mengisi dropdown Nama Produk berdasarkan Jenis Produk dan Filter (jika ada)
+         * @param {string} selectedJenis Jenis Produk yang dipilih
+         * @param {string|null} filter Nilai filter (misalnya '4 meter' atau 'BIRU')
+         */
+        function populateNamaProduk(selectedJenis, filter = null) {
+            namaProdukSelect.innerHTML = '<option value="" disabled selected>Pilih Nama Produk</option>'; // Reset
+            
+            const data = PRODUCT_DATA[selectedJenis];
+            if (!data) return;
+
+            let productsToDisplay = data.products;
+
+            // Logika Filter
+            if (filter && Array.isArray(productsToDisplay) && productsToDisplay.every(p => typeof p === 'object' && p.filter)) {
+                // Asumsi untuk Galvalum dan Pipa, produk adalah array objek dengan key 'filter'
+                productsToDisplay = productsToDisplay.filter(p => p.filter.toLowerCase() === filter.toLowerCase());
+            } else if (Array.isArray(productsToDisplay) && productsToDisplay.every(p => typeof p === 'object' && p.filter)) {
+                // Jika tidak ada filter yang dipilih (tapi produknya objek), tampilkan semua
+                // productsToDisplay sudah benar (semua objek)
             }
-        };
 
-        const jenisProdukSelect = document.getElementById('jenisProduk');
-        const namaProdukSelect = document.getElementById('namaProduk');
-        const conditionalFiltersDiv = document.getElementById('conditionalFilters');
-        const locationInput = document.getElementById('lokasi');
-        const locationInputContainer = document.getElementById('locationInput');
-        const filterButtonsDiv = document.getElementById('filterButtons');
-        const form = document.getElementById('stockForm');
-        const statusMessage = document.getElementById('statusMessage');
-        const btnMasuk = document.getElementById('btnBarangMasuk');
-        const btnKeluar = document.getElementById('btnBarangKeluar');
-        const loadingMasuk = document.getElementById('loadingMasuk');
-        const loadingKeluar = document.getElementById('loadingKeluar');
-        
-        // Simpan referensi tombol filter untuk reset
-        const filters = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"];
 
-        function populateJenisProduk() {
-            for (const jenis in PRODUCT_DATA) {
-                const option = document.createElement('option');
-                option.value = jenis;
-                option.textContent = jenis;
-                jenisProdukSelect.appendChild(option);
-            }
-        }
+            // Tampilkan produk ke dropdown
+            productsToDisplay.forEach(product => {
+                const productName = typeof product === 'string' ? product : product.name;
+                const option = document.createElement('option');
+                option.value = productName;
+                option.textContent = productName;
+                namaProdukSelect.appendChild(option);
+            });
+        }
 
-        function updateNamaProduk(selectedJenis) {
-            namaProdukSelect.innerHTML = '<option value="" disabled selected>Pilih Nama Produk</option>';
-            filterButtonsDiv.innerHTML = '';
-            locationInput.value = ''; // Reset lokasi
+        /**
+         * Menampilkan atau menyembunyikan elemen filter kondisional (Lokasi & Tombol Filter)
+         * @param {string} selectedJenis Jenis Produk yang dipilih
+         */
+        function handleConditionalUI(selectedJenis) {
+            // Reset semua
+            conditionalFiltersDiv.classList.add('hidden');
+            locationInputDiv.classList.add('hidden');
+            filterButtonsDiv.innerHTML = ''; // Reset tombol filter
+            lokasiInput.required = false;
+            lokasiInput.value = ''; // Kosongkan input lokasi
 
-            // Tampilkan/Sembunyikan Filter dan Lokasi
-            const isPipaGalv = selectedJenis === "PIPA GALV KOTAK";
-            const needsFilterButtons = selectedJenis && !isPipaGalv;
+            if (selectedJenis === "GALVALUM - BONDEX") {
+                // Tampilkan filter tombol panjang untuk GALVALUM
+                conditionalFiltersDiv.classList.remove('hidden');
+                $('filterLabel').textContent = 'Filter Berdasarkan Panjang:';
+                
+                PRODUCT_DATA[selectedJenis].filters.forEach(filter => {
+                    filterButtonsDiv.appendChild(createFilterButton(filter, selectedJenis));
+                });
+                // Reset filter default
+                selectedFilter = null; 
+                populateNamaProduk(selectedJenis); // Tampilkan semua produk Galvalum tanpa filter
 
-            locationInputContainer.style.display = isPipaGalv ? 'block' : 'none';
-            document.getElementById('lokasi').required = isPipaGalv;
-            
-            if (needsFilterButtons) {
-                conditionalFiltersDiv.classList.remove('hidden');
-                document.getElementById('filterLabel').classList.remove('hidden');
-                createFilterButtons(selectedJenis);
-            } else if (isPipaGalv) {
-                conditionalFiltersDiv.classList.remove('hidden');
-                document.getElementById('filterLabel').classList.add('hidden');
-            } else {
-                conditionalFiltersDiv.classList.add('hidden');
-            }
+            } else if (selectedJenis === "PIPA GALV KOTAK") {
+                // Tampilkan input Lokasi dan filter tombol warna
+                conditionalFiltersDiv.classList.remove('hidden');
+                locationInputDiv.classList.remove('hidden');
+                $('filterLabel').textContent = 'Filter Berdasarkan Kode Warna:';
+                lokasiInput.required = true; // Lokasi wajib diisi
+                
+                PRODUCT_DATA[selectedJenis].filters.forEach(filter => {
+                    filterButtonsDiv.appendChild(createFilterButton(filter, selectedJenis));
+                });
+                // Reset filter default
+                selectedFilter = null; 
+                populateNamaProduk(selectedJenis); // Tampilkan semua produk Pipa tanpa filter
+            } else {
+                // Untuk Jenis Produk lainnya, hanya panggil populate
+                populateNamaProduk(selectedJenis);
+            }
+        }
 
-            // Tampilkan semua produk
-            if (selectedJenis && PRODUCT_DATA[selectedJenis] && PRODUCT_DATA[selectedJenis].products) {
-                PRODUCT_DATA[selectedJenis].products.forEach(product => {
-                    const option = document.createElement('option');
-                    option.value = product;
-                    option.textContent = product;
-                    namaProdukSelect.appendChild(option);
-                });
-            }
-            
-            if (!isPipaGalv) {
-                locationInput.value = 'N/A';
-            }
-        }
+        /**
+         * Membuat elemen tombol filter
+         * @param {string} text Teks yang akan ditampilkan pada tombol
+         * @param {string} jenis Jenis produk terkait
+         * @returns {HTMLElement} Tombol filter
+         */
+        function createFilterButton(text, jenis) {
+            const button = document.createElement('button');
+            button.type = 'button';
+            button.textContent = text;
+            button.classList.add('px-3', 'py-1', 'text-xs', 'font-medium', 'rounded-full', 'bg-gray-200', 'text-gray-700', 'hover:bg-indigo-200', 'transition', 'duration-150');
 
-        function createFilterButtons(selectedJenis) {
-            filterButtonsDiv.innerHTML = '';
-            
-            const allButton = document.createElement('button');
-            allButton.textContent = 'Semua';
-            allButton.classList.add('px-3', 'py-1', 'text-sm', 'bg-indigo-600', 'text-white', 'rounded-lg', 'hover:bg-indigo-700', 'transition', 'active-filter');
-            allButton.addEventListener('click', (e) => {
-                e.preventDefault();
-                filterByInitial('');
-            });
-            filterButtonsDiv.appendChild(allButton);
+            button.addEventListener('click', () => {
+                // Hapus kelas aktif dari semua tombol
+                filterButtonsDiv.querySelectorAll('button').forEach(btn => {
+                    btn.classList.remove('bg-indigo-600', 'text-white', 'scale-105');
+                    btn.classList.add('bg-gray-200', 'text-gray-700');
+                });
+                
+                // Tambahkan kelas aktif ke tombol yang baru diklik
+                button.classList.add('bg-indigo-600', 'text-white', 'scale-105');
+                button.classList.remove('bg-gray-200', 'text-gray-700');
+                
+                selectedFilter = text; // Set filter yang dipilih
+                populateNamaProduk(jenis, selectedFilter); // Populasikan ulang Nama Produk
+            });
 
-            filters.forEach(initial => {
-                const button = document.createElement('button');
-                button.textContent = initial;
-                button.classList.add('px-3', 'py-1', 'text-sm', 'bg-gray-200', 'text-gray-700', 'rounded-lg', 'hover:bg-indigo-100', 'transition');
-                button.addEventListener('click', (e) => {
-                    e.preventDefault();
-                    filterByInitial(initial);
-                });
-                filterButtonsDiv.appendChild(button);
-            });
-        }
+            return button;
+        }
 
-        function filterByInitial(initial) {
-            const currentJenis = jenisProdukSelect.value;
-            if (!currentJenis || !PRODUCT_DATA[currentJenis]) return;
+        /**
+         * Menampilkan pesan status di UI
+         * @param {string} message Pesan yang akan ditampilkan
+         * @param {boolean} isSuccess Menunjukkan apakah pesan sukses atau error
+         */
+        function showStatusMessage(message, isSuccess) {
+            statusMessageDiv.textContent = message;
+            statusMessageDiv.classList.remove('hidden', 'bg-green-100', 'text-green-800', 'bg-red-100', 'text-red-800');
+            statusMessageDiv.classList.add(isSuccess ? 'bg-green-100' : 'bg-red-100', isSuccess ? 'text-green-800' : 'text-red-800');
+            
+            // Sembunyikan pesan setelah 5 detik
+            setTimeout(() => {
+                statusMessageDiv.classList.add('hidden');
+            }, 5000);
+        }
 
-            const products = PRODUCT_DATA[currentJenis].products;
-            const filteredProducts = initial ? products.filter(p => p.startsWith(initial)) : products;
+        /**
+         * Mengirim data formulir ke Google Form yang sesuai
+         * @param {string} transactionType Tipe transaksi: 'masuk' atau 'keluar'
+         */
+        async function submitForm(transactionType) {
+            if (!form.checkValidity()) {
+                form.reportValidity(); // Tampilkan pesan validasi default browser
+                return;
+            }
 
-            namaProdukSelect.innerHTML = '<option value="" disabled selected>Pilih Nama Produk</option>';
-            filteredProducts.forEach(product => {
-                const option = document.createElement('option');
-                option.value = product;
-                option.textContent = product;
-                namaProdukSelect.appendChild(option);
-            });
+            const jenis = jenisProdukSelect.value;
+            const nama = namaProdukSelect.value;
+            const jumlah = $('jumlah').value;
+            const checker = $('checker').value;
+            const lokasi = lokasiInput.value || ''; // Kosongkan jika tidak ada
 
-            // Update active state of buttons
-            document.querySelectorAll('#filterButtons button').forEach(btn => {
-                btn.classList.remove('bg-indigo-600', 'text-white', 'active-filter');
-                btn.classList.add('bg-gray-200', 'text-gray-700');
-            });
-            
-            const targetButton = initial ?
-                Array.from(filterButtonsDiv.children).find(btn => btn.textContent === initial) :
-                document.querySelector('#filterButtons button:first-child');
-                
-            if (targetButton) {
-                targetButton.classList.remove('bg-gray-200', 'text-gray-700');
-                targetButton.classList.add('bg-indigo-600', 'text-white', 'active-filter');
-            }
-        }
+            const productConfig = PRODUCT_DATA[jenis];
+            if (!productConfig) {
+                showStatusMessage("Error: Jenis Produk tidak valid.", false);
+                return;
+            }
+            
+            // Tentukan URL dan Entry ID
+            const formURL = productConfig.form_url;
+            const entryIds = productConfig.entry;
+            
+            // Tentukan entry ID untuk jumlah (Masuk atau Keluar)
+            const jumlahEntryId = transactionType === 'masuk' ? entryIds.masuk : entryIds.keluar;
 
-        function showStatus(message, isSuccess = true) {
-            statusMessage.textContent = message;
-            statusMessage.classList.remove('hidden', 'bg-green-100', 'text-green-700', 'bg-red-100', 'text-red-700', 'animate-pulse');
-            if (isSuccess) {
-                statusMessage.classList.add('bg-green-100', 'text-green-700');
-            } else {
-                statusMessage.classList.add('bg-red-100', 'text-red-700', 'animate-pulse');
-            }
-            statusMessage.classList.remove('hidden');
-            setTimeout(() => statusMessage.classList.add('hidden'), 5000);
-        }
+            // Data yang akan dikirim ke Google Form
+            const formData = new FormData();
+            formData.append(entryIds.nama_produk, nama);
+            formData.append(jumlahEntryId, jumlah); // Hanya salah satu (masuk atau keluar) yang diisi
+            formData.append(entryIds.checker, checker);
+            
+            // Jika lokasi wajib (PIPA GALV KOTAK)
+            if (lokasiInput.required && lokasi) {
+                 formData.append(entryIds.lokasi, lokasi);
+            } else if (lokasiInput.required && !lokasi) {
+                showStatusMessage("Lokasi wajib diisi untuk Jenis Produk ini.", false);
+                return;
+            }
 
-        function setLoading(isLoading, type) {
-            const button = type === 'masuk' ? btnMasuk : btnKeluar;
-            const loadingSpan = type === 'masuk' ? loadingMasuk : loadingKeluar;
-            const originalText = `Barang ${type === 'masuk' ? 'Masuk (IN)' : 'Keluar (OUT)'}`;
-            
-            button.disabled = isLoading;
-            if (isLoading) {
-                loadingSpan.classList.remove('hidden');
-                button.classList.add('opacity-70', 'cursor-not-allowed');
-                button.innerHTML = `<div class="loader-icon w-4 h-4 rounded-full border-2 border-white/50 border-t-white inline-block mr-2 animate-spin"></div> Memproses...`;
-            } else {
-                loadingSpan.classList.add('hidden');
+            const button = transactionType === 'masuk' ? $('btnBarangMasuk') : $('btnBarangKeluar');
+            const loading = transactionType === 'masuk' ? $('loadingMasuk') : $('loadingKeluar');
+
+            // Tampilkan loading dan nonaktifkan tombol
+            button.disabled = true;
+            button.classList.add('opacity-70', 'cursor-not-allowed');
+            button.innerHTML = `<span class="loader-icon mr-2"></span> Memproses...`;
+
+            showStatusMessage("Mengirim data...", true);
+
+            try {
+                // Kirim data menggunakan fetch ke endpoint Google Form
+                const response = await fetch(formURL, {
+                    method: 'POST',
+                    mode: 'no-cors', // Penting untuk Google Form submission
+                    body: new URLSearchParams(formData)
+                });
+                
+                // Karena mode: 'no-cors', kita tidak bisa membaca respons, tapi asumsi berhasil
+                showStatusMessage(`✅ Data Stok ${nama} (${transactionType.toUpperCase()}) sejumlah ${jumlah} berhasil dikirim!`, true);
+                
+                // Form kembali kosong setelah submit
+                form.reset();
+                selectedFilter = null; // Reset filter
+                handleConditionalUI(""); // Reset UI kondisional
+                populateNamaProduk("");
+
+            } catch (error) {
+                console.error("Error submitting form:", error);
+                showStatusMessage("❌ Gagal mengirim data. Cek koneksi atau URL Google Form Anda.", false);
+            } finally {
+                // Sembunyikan loading dan aktifkan tombol kembali
+                button.disabled = false;
                 button.classList.remove('opacity-70', 'cursor-not-allowed');
-                button.innerHTML = originalText;
-            }
-        }
-        
-        async function submitForm(type) {
-            const jenisProduk = jenisProdukSelect.value;
-            const namaProduk = namaProdukSelect.value;
-            const jumlah = document.getElementById('jumlah').value;
-            const checker = document.getElementById('checker').value;
-            let lokasi = locationInput.value;
+                button.innerHTML = `Barang ${transactionType === 'masuk' ? 'Masuk (IN)' : 'Keluar (OUT)'}`;
+            }
+        }
 
-            if (!jenisProduk || !namaProduk || !jumlah || !checker || (jenisProduk === "PIPA GALV KOTAK" && !lokasi)) {
-                showStatus('Mohon lengkapi semua data!', false);
-                return;
-            }
+        // --- Event Listeners ---
+        document.addEventListener('DOMContentLoaded', () => {
+            checkSessionAccess();
+            initJenisProduk(); // Inisialisasi dropdown Jenis Produk
+            
+            // Event listener untuk Jenis Produk
+            jenisProdukSelect.addEventListener('change', (e) => {
+                const selectedJenis = e.target.value;
+                handleConditionalUI(selectedJenis); // Update UI dan Nama Produk
+            });
 
-            if (jenisProduk !== "PIPA GALV KOTAK") {
-                lokasi = 'N/A'; 
-            }
-
-            setLoading(true, type);
-            showStatus('Mengirim data...', true);
-
-            const formData = new FormData();
-            const config = PRODUCT_DATA[jenisProduk];
-
-            if (type === 'masuk') {
-                formData.append(config.entry.masuk, jumlah);
-            } else {
-                formData.append(config.entry.keluar, jumlah);
-            }
-            formData.append(config.entry.nama_produk, namaProduk);
-            formData.append(config.entry.checker, checker);
-            if (config.entry.lokasi) { 
-                formData.append(config.entry.lokasi, lokasi);
-            }
-
-            try {
-                const response = await fetch(config.form_url, {
-                    method: 'POST',
-                    body: formData,
-                    mode: 'no-cors'
-                });
-
-                if (response.type === 'opaque' || response.ok) {
-                    showStatus('Data berhasil dikirim! ✅', true);
-                    // Reset fields yang spesifik
-                    document.getElementById('jumlah').value = '';
-                    if (jenisProduk === "PIPA GALV KOTAK") {
-                        document.getElementById('lokasi').value = '';
-                    } else {
-                        document.getElementById('lokasi').value = 'N/A';
-                    }
-                } else {
-                    throw new Error('Gagal mengirim data. Silakan coba lagi.');
-                }
-            } catch (error) {
-                console.error('Error:', error);
-                showStatus('Terjadi kesalahan saat mengirim data. Cek koneksi Anda. ❌', false);
-            } finally {
-                setLoading(false, type);
-            }
-        }
-
-        jenisProdukSelect.addEventListener('change', (e) => {
-            updateNamaProduk(e.target.value);
-        });
-
-        btnMasuk.addEventListener('click', () => submitForm('masuk'));
-        btnKeluar.addEventListener('click', () => submitForm('keluar'));
-        
-        document.addEventListener('DOMContentLoaded', populateJenisProduk);
-    </script>
+            // Event listener untuk tombol submit
+            $('btnBarangMasuk').addEventListener('click', () => submitForm('masuk'));
+            $('btnBarangKeluar').addEventListener('click', () => submitForm('keluar'));
+        });
+    </script>
 </body>
 </html>
