@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistem Otentikasi - Gudang</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f7f9fc;
+        }
+        .container {
+            max-width: 420px;
+        }
+    </style>
+</head>
+<body class="flex items-center justify-center min-h-screen p-4">
+    <div id="app" class="container bg-white shadow-2xl rounded-xl p-8 w-full transition-all duration-300">
+        <div id="main-content">
+            <div id="loader" class="text-center p-4 hidden">
+                <svg class="animate-spin h-5 w-5 mr-3 text-indigo-500 mx-auto" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                </svg>
+                <p class="text-sm text-gray-500 mt-2">Memproses...</p>
+            </div>
+
+            <div id="auth-view">
+                <h1 class="text-3xl font-bold text-gray-800 mb-6 text-center" id="auth-title">Masuk ke Sistem</h1>
+                
+                <div class="flex justify-center mb-6">
+                    <button id="toggle-signin" class="px-4 py-2 text-sm font-medium rounded-l-lg transition-colors duration-200 bg-indigo-600 text-white shadow-md">Masuk</button>
+                    <button id="toggle-signup" class="px-4 py-2 text-sm font-medium rounded-r-lg transition-colors duration-200 bg-gray-200 text-gray-700 hover:bg-gray-300">Daftar</button>
+                </div>
+
+                <form id="auth-form" onsubmit="event.preventDefault(); submitAuth();">
+                    <div class="mb-4">
+                        <label for="email" class="block text-sm font-medium text-gray-700 mb-1">Email</label>
+                        <input type="email" id="email" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-indigo-500 focus:border-indigo-500 transition duration-150">
+                    </div>
+                    <div class="mb-6">
+                        <label for="password" class="block text-sm font-medium text-gray-700 mb-1">Kata Sandi</label>
+                        <input type="password" id="password" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-indigo-500 focus:border-indigo-500 transition duration-150">
+                    </div>
+                    
+                    <button type="submit" id="submit-button" class="w-full bg-indigo-600 text-white py-2.5 rounded-lg hover:bg-indigo-700 transition duration-200 font-semibold shadow-md">Masuk</button>
+                </form>
+
+                <div id="message-area" class="mt-6 p-3 rounded-lg text-sm hidden" role="alert"></div>
+            </div>
+            
+            <div id="dashboard-view" class="text-center p-6 hidden">
+                <h1 class="text-3xl font-extrabold text-indigo-600 mb-4">Akses Disetujui!</h1>
+                <p class="text-lg text-gray-700 mb-6">Selamat datang, <span id="user-display-email" class="font-semibold"></span>. Mengalihkan...</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // PASTIKAN ANDA MENGGANTI INI DENGAN URL WEB APP GAS ASLI ANDA
+        const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycby0u7o9ml5CSyG4qI-6ycMaCgQwuLZS3ZMj7hAxkir-1Svh9Qz1obP21c4q8EA-alO9/exec'; 
+        const STORAGE_KEY = 'user_session_approved';
+
+        let isSigningUp = false;
+        const app = document.getElementById('app');
+        const authView = document.getElementById('auth-view');
+        const dashboardView = document.getElementById('dashboard-view');
+        const authTitle = document.getElementById('auth-title');
+        const submitButton = document.getElementById('submit-button');
+        const messageArea = document.getElementById('message-area');
+        const loader = document.getElementById('loader');
+        const toggleSignin = document.getElementById('toggle-signin');
+        const toggleSignup = document.getElementById('toggle-signup');
+
+        function toggleAuthMode(isSignUpMode) {
+            isSigningUp = isSignUpMode;
+            authTitle.textContent = isSigningUp ? 'Daftar Akun Baru' : 'Masuk ke Sistem';
+            submitButton.textContent = isSigningUp ? 'Daftar' : 'Masuk';
+            const [active, inactive] = isSigningUp ? [toggleSignup, toggleSignin] : [toggleSignin, toggleSignup];
+            
+            active.classList.remove('bg-gray-200', 'text-gray-700', 'hover:bg-gray-300');
+            active.classList.add('bg-indigo-600', 'text-white', 'shadow-md');
+            inactive.classList.remove('bg-indigo-600', 'text-white', 'shadow-md');
+            inactive.classList.add('bg-gray-200', 'text-gray-700', 'hover:bg-gray-300');
+            showMessage(null);
+        }
+
+        function showMessage(msg, type = 'error') {
+            if (!msg) {
+                messageArea.classList.add('hidden');
+                return;
+            }
+            messageArea.textContent = msg;
+            messageArea.className = `mt-6 p-3 rounded-lg text-sm transition duration-300`;
+            if (type === 'success') {
+                messageArea.classList.add('bg-green-100', 'text-green-700');
+            } else if (type === 'warning') {
+                messageArea.classList.add('bg-yellow-100', 'text-yellow-700');
+            } else {
+                messageArea.classList.add('bg-red-100', 'text-red-700');
+            }
+        }
+
+        function setLoading(isLoading) {
+            if (isLoading) {
+                loader.classList.remove('hidden');
+                authView.classList.add('hidden');
+                submitButton.disabled = true;
+            } else {
+                loader.classList.add('hidden');
+                authView.classList.remove('hidden');
+                submitButton.disabled = false;
+            }
+        }
+
+        async function submitAuth() {
+            const emailInput = document.getElementById('email').value.trim();
+            const passwordInput = document.getElementById('password').value;
+            const action = isSigningUp ? 'signup' : 'signin';
+
+            if (!emailInput || !passwordInput) {
+                showMessage('Email dan Kata Sandi harus diisi.');
+                return;
+            }
+
+            setLoading(true);
+            showMessage(null);
+
+            try {
+                const dataToSend = { action: action, email: emailInput, password: passwordInput };
+                const response = await fetch(WEB_APP_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                    body: new URLSearchParams(dataToSend).toString()
+                });
+
+                if (!response.ok) {
+                    throw new Error(`Permintaan API gagal dengan status: ${response.status}`);
+                }
+
+                const result = await response.json();
+
+                if (result.success) {
+                    if (action === 'signin') {
+                        if (result.is_approved) {
+                            localStorage.setItem(STORAGE_KEY, JSON.stringify({ email: emailInput, timestamp: Date.now() }));
+                            renderDashboard(emailInput);
+                        } else {
+                            showMessage(`Login berhasil, tetapi status persetujuan Anda adalah: ${result.status_persetujuan}. Harap tunggu persetujuan admin.`, 'warning');
+                        }
+                    } else if (action === 'signup') {
+                        showMessage(result.message, 'success');
+                        document.getElementById('email').value = '';
+                        document.getElementById('password').value = '';
+                        toggleAuthMode(false);
+                    }
+                } else {
+                    showMessage(result.message || 'Terjadi kesalahan tidak diketahui.');
+                }
+
+            } catch (error) {
+                console.error('Fetch error:', error);
+                showMessage(`Terjadi kesalahan jaringan atau Web App URL salah: ${error.message}`);
+            } finally {
+                setLoading(false);
+            }
+        }
+
+        function renderDashboard(userEmail) {
+            authView.classList.add('hidden');
+            dashboardView.classList.remove('hidden');
+            document.getElementById('user-display-email').textContent = userEmail;
+            app.classList.add('bg-indigo-50');
+            // Jika login berhasil, redirect ke dashboard.html setelah 2 detik
+            setTimeout(() => {
+                window.location.href = 'dashboard.html';
+            }, 2000); 
+        }
+
+        function checkSession() {
+            const storedSession = localStorage.getItem(STORAGE_KEY);
+            if (storedSession) {
+                try {
+                    // Jika sesi ada, langsung redirect ke dashboard
+                    window.location.href = 'dashboard.html'; 
+                    return;
+                } catch (e) {
+                    localStorage.removeItem(STORAGE_KEY);
+                }
+            }
+            // Jika tidak ada sesi, tampilkan form login
+            dashboardView.classList.add('hidden');
+            authView.classList.remove('hidden');
+            setLoading(false);
+            toggleAuthMode(false);
+        }
+
+        toggleSignin.addEventListener('click', () => toggleAuthMode(false));
+        toggleSignup.addEventListener('click', () => toggleAuthMode(true));
+        document.addEventListener('DOMContentLoaded', checkSession);
+
+    </script>
+</body>
+</html>
