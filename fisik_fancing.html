@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Fisik Fancing</title>
+    <title>Fisik Fenching</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
@@ -31,7 +31,100 @@
             max-height: 500px; 
             opacity: 1;
         }
+        /* Style dari kode Fisik Fencing Anda */
+        .lokasi-btn-wrap {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin: 0 auto 16px;
+        }
+        .lokasi-btn {
+            padding: 10px 20px;
+            background: #e4e9f7;
+            border: 1px solid #d4d7dd;
+            color: #1e3c72;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.2s;
+            /* Tambahkan style Tailwind untuk hover/focus */
+            @apply hover:bg-indigo-200 focus:outline-none focus:ring-2 focus:ring-indigo-500;
+        }
+        .lokasi-btn.active {
+            background: #4b6cb7;
+            color: #fff;
+            border-color: #4b6cb7;
+            /* Ganti dengan Tailwind */
+            @apply bg-indigo-600 border-indigo-600 text-white;
+        }
+        .lokasi-btn:not(.active):hover {
+            background: #d4e0fa;
+        }
+        .search-box {
+            width: 100%;
+            padding: 12px;
+            font-size: 1.1em;
+            border: 2px solid #d4d7dd;
+            border-radius: 8px;
+            margin-bottom: 16px;
+            box-sizing: border-box;
+            /* Tambahkan style Tailwind */
+            @apply focus:border-indigo-500;
+        }
+        .scroll-table-container {
+            margin-top: 8px;
+            overflow: auto;
+            max-height: 66vh;
+            border: 1px solid #d1d8e4;
+            border-radius: 8px;
+            background: #fafbff;
+        }
+        #data-table {
+            width: 100%;
+            border-collapse: collapse;
+            background: #fff;
+        }
+        #data-table th, #data-table td {
+            padding: 10px 12px;
+            border: 1px solid #d1d8e4;
+            text-align: left;
+            font-size: 1em;
+            background: inherit;
+        }
+        #data-table th {
+            background: #e4e9f7;
+            color: #1e3c72;
+            font-weight: 600;
+            position: sticky;
+            top: 0;
+        }
+        #data-table tr:hover {
+            background: #f4f8fa;
+        }
+        #data-table tbody tr:nth-child(even) {
+            background: #f7f9fc;
+        }
+        td.empty {
+            font-style: italic;
+            color: #718096;
+            text-align: center;
+            background: #fff;
+        }
+        @media (max-width: 600px) {
+            .container {
+                padding: 8px;
+            }
+            #data-table th, #data-table td {
+                padding: 8px 10px;
+                font-size: .96em;
+            }
+            .lokasi-btn {
+                padding: 8px 14px;
+                font-size: 0.92em;
+            }
+        }
     </style>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
 </head>
 <body>
 
@@ -65,40 +158,44 @@
         <div id="mobile-menu" class="mobile-menu sm:hidden px-2 pt-2 pb-3 space-y-1 bg-white shadow-xl">
             <a href="dashboard.html" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-indigo-50 hover:text-indigo-700">Dashboard</a>
             <a href="input_stok.html" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-indigo-50 hover:text-indigo-700">Input Stok</a>
-            <a href="fisik_fancing.html" class="block px-3 py-2 rounded-md text-base font-medium bg-indigo-50 text-indigo-700">Fisik Fancing</a>
+            <a href="fisik_fancing.html" class="block px-3 py-2 rounded-md text-base font-medium bg-indigo-50 text-indigo-700">Fisik Fenching</a>
             <button onclick="logoutRedirect()" class="w-full text-left bg-red-500 hover:bg-red-600 text-white px-3 py-2 rounded-md text-base font-semibold transition duration-150 mt-2">Logout</button>
         </div>
     </header>
 
 
-    <div class="max-w-4xl mx-auto mb-10 p-6 md:p-10 main-content">
-        <div class="bg-white p-6 rounded-2xl shadow-xl mb-8">
-            <h1 class="text-3xl font-bold text-gray-800 mb-2 flex items-center">
-                📊 Data Fisik Fancing
-            </h1>
-            <p class="text-gray-500">Halaman ini digunakan untuk melihat fisik fancing.</p>
-        </div>
-
-        <div class="p-6 bg-yellow-50 rounded-xl border border-yellow-200 shadow-md">
-            <h2 class="text-xl font-semibold text-yellow-800 mb-4">Under Construction 🚧</h2>
-            <p class="text-yellow-700">Konten spesifik untuk Fencing dan Data Fisik belum diimplementasikan. Di sini nantinya akan ditampilkan tabel/data dari Google Sheet yang relevan.</p>
-        </div>
-        
-        <div class="mt-8 grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div class="bg-white p-6 rounded-xl shadow-md">
-                <h3 class="font-bold text-indigo-600 mb-2">Total Stok Fisik</h3>
-                <p class="text-3xl">4,250 Unit</p>
+    <div class="container max-w-6xl mx-auto mb-10 p-6 md:p-10 main-content">
+        <div class="bg-white p-6 rounded-2xl shadow-2xl">
+            <h2 class="text-3xl font-bold text-center text-gray-800 mb-6">Fisik Fenching</h2>
+            
+            <div class="lokasi-btn-wrap">
+                <button class="lokasi-btn" id="g5000-btn">Gudang G5000</button>
+                <button class="lokasi-btn" id="gm-btn">Gudang GM</button>
             </div>
-            <div class="bg-white p-6 rounded-xl shadow-md">
-                <h3 class="font-bold text-indigo-600 mb-2">Jumlah Jenis Barang</h3>
-                <p class="text-3xl">6 Kategori</p>
+            
+            <input type="text" class="search-box" id="search" placeholder="Cari berdasarkan Nama Produk atau Barcode..." autocomplete="off"/>
+            
+            <div class="scroll-table-container">
+                <table id="data-table">
+                    <thead>
+                        <tr>
+                            <th>Nama Produk</th>
+                            <th>Barcode</th>
+                            <th>Lokasi</th>
+                            <th>Fisik</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td colspan="4" class="empty">Silakan pilih gudang terlebih dahulu.</td></tr>
+                    </tbody>
+                </table>
             </div>
         </div>
-
     </div>
 
+
     <script>
-        // --- Session Check & Logout (SAMA PERSIS DENGAN INPUT_STOK.HTML) ---
+        // --- Session Check & Logout ---
         const STORAGE_KEY = 'user_session_approved';
 
         function checkSessionAccess() {
@@ -112,7 +209,7 @@
             window.location.href = 'index.html';
         }
         
-        // --- Hamburger Menu Logic (SAMA PERSIS DENGAN INPUT_STOK.HTML) ---
+        // --- Hamburger Menu Logic ---
         const btnH = document.getElementById('hamburger-btn');
         const menuH = document.getElementById('mobile-menu');
         const iconOpenH = document.getElementById('icon-open');
@@ -123,12 +220,137 @@
             iconOpenH.classList.toggle('hidden');
             iconCloseH.classList.toggle('hidden');
         });
-        // --- End Hamburger Menu Logic ---
+        // --- End Navigation Logic ---
 
 
-        // Initialization
+        // ===== KONFIGURASI LINK CSV (DARI KODE ANDA) =====
+        // Silakan sesuaikan dengan link spreadsheet Google Sheets Anda
+        const CSV_URLS = {
+            "G5000": "https://docs.google.com/spreadsheets/d/e/2PACX-1vRmMBbi9lLQweM1ZFNY3vu9KxoYECoGAmUVPqTy_9oELLV5HKLiEbO5TCHEdyndsZKKbPnzV7NRuOm6/pub?output=csv",
+            "GM": "https://docs.google.com/spreadsheets/d/e/2PACX-1vSg028wvK1zQ_E6oo5Y3bZYwbbukwI5D_C2vd_dAyChSHWAUnvta-yz9mPY9sy5gqXQ0Thhgd-6MSlo/pub?output=csv"
+        };
+
+        // ===== VARIABEL GLOBAL =====
+        let dataBarang = [];      // Menyimpan data asli dari CSV yang dipilih
+        let activeLokasi = null;  // Menyimpan gudang yang sedang aktif (G5000/GM)
+        let searchKeyword = "";   // Keyword pencarian di kotak search
+
+        // ===== FUNGSI RENDER TABEL =====
+        function renderTable(data) {
+            const tbody = document.querySelector('#data-table tbody');
+            if (!data || data.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="4" class="empty">Tidak ada data ditemukan.</td></tr>';
+                return;
+            }
+            // Render baris: menggunakan logika yang Anda berikan untuk menangani nilai null/kosong/negatif
+            tbody.innerHTML = data.map(barang => `
+                <tr>
+                    <td>${
+                        barang.nama === undefined || barang.nama === null || barang.nama === "" ?
+                            '' :
+                            barang.nama
+                    }</td>
+                    <td>${
+                        barang.barcode === undefined || barang.barcode === null || barang.barcode === "" ?
+                            '' :
+                            barang.barcode
+                    }</td>
+                    <td>${
+                        barang.lokasi === undefined || barang.lokasi === null || barang.lokasi < 0 ?
+                            '' :
+                            barang.lokasi
+                    }</td>
+                    <td>${
+                        barang.fisik === undefined || barang.fisik === null || barang.fisik < 0 ?
+                            '' :
+                            barang.fisik
+                    }</td>
+                </tr>
+            `).join('');
+        }
+
+        // ===== FUNGSI LOAD DATA CSV =====
+        function loadData(lokasi) {
+            activeLokasi = lokasi;
+            // Bersihkan tabel dan tampilkan pesan loading
+            const tbody = document.querySelector('#data-table tbody');
+            tbody.innerHTML = '<tr><td colspan="4" class="empty">Memuat data...</td></tr>';
+            // Update style tombol aktif/inaktif
+            document.querySelectorAll('.lokasi-btn').forEach(btn => {
+                btn.classList.remove('active');
+                btn.classList.remove('bg-indigo-600', 'border-indigo-600', 'text-white');
+                btn.classList.add('bg-gray-200', 'border-gray-300', 'text-gray-700');
+            });
+
+            const activeBtn = document.querySelector(`#${lokasi.toLowerCase()}-btn`);
+            if(activeBtn) {
+                activeBtn.classList.add('active', 'bg-indigo-600', 'border-indigo-600', 'text-white');
+                activeBtn.classList.remove('bg-gray-200', 'border-gray-300', 'text-gray-700');
+            }
+
+            // Load CSV via Papa Parse
+            Papa.parse(CSV_URLS[lokasi], {
+                download: true,
+                header: true,
+                skipEmptyLines: true,
+                dynamicTyping: true,
+                complete: (results) => {
+                    // Logika mapping kolom yang Anda berikan (Index 5, 6, 7, 8)
+                    dataBarang = results.data
+                        .filter(row => row[Object.keys(row)[5]] || row[Object.keys(row)[6]] || row[Object.keys(row)[7]] || row[Object.keys(row)[8]])
+                        .map(row => ({
+                            nama: row[Object.keys(row)[5]],
+                            barcode: row[Object.keys(row)[6]] ,
+                            lokasi: row[Object.keys(row)[7]] ,
+                            fisik: row[Object.keys(row)[8]] 
+                    }));
+
+                    // Filter out rows where all mapped fields are empty/undefined/null
+                    dataBarang = dataBarang.filter(row => (
+                        row.nama !== undefined && row.nama !== null && row.nama !== "" || 
+                        row.barcode !== undefined && row.barcode !== null && row.barcode !== "" || 
+                        row.lokasi !== undefined && row.lokasi !== null && row.lokasi !== "" || 
+                        row.fisik !== undefined && row.fisik !== null && row.fisik !== ""
+                    ));
+                    
+                    // Tampilkan data ke tabel
+                    applyFilter();
+                },
+                error: (err) => {
+                    document.querySelector('#data-table tbody').innerHTML =
+                        '<tr><td colspan="4" class="empty" style="color:red;">Gagal memuat data. Periksa URL CSV Anda.</td></tr>';
+                    console.error(err);
+                }
+            });
+        }
+
+        // ===== FUNGSI LIVE SEARCH =====
+        function applyFilter() {
+            if (!activeLokasi) {
+                renderTable(null);
+                return;
+            }
+            const filtered = searchKeyword ? 
+                dataBarang.filter(b => (
+                    // Cek nama produk atau barcode (case insensitive)
+                    (b.nama && b.nama.toString().toLowerCase().includes(searchKeyword.toLowerCase())) ||
+                    (b.barcode && b.barcode.toString().toLowerCase().includes(searchKeyword.toLowerCase()))
+                )) : dataBarang;
+            renderTable(filtered);
+        }
+
+        // ===== EVENT LISTENER & INIT =====
         document.addEventListener('DOMContentLoaded', () => {
             checkSessionAccess();
+            // Attach button listeners
+            document.getElementById('g5000-btn').addEventListener('click', () => loadData('G5000'));
+            document.getElementById('gm-btn').addEventListener('click', () => loadData('GM'));
+            
+            // Attach search listener
+            document.getElementById('search').addEventListener('input', function() {
+                searchKeyword = this.value.trim().toLowerCase();
+                applyFilter();
+            });
         });
     </script>
 </body>
