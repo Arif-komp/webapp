@@ -3,103 +3,117 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Input Stok Gudang (Halaman 2)</title>
+    <title>Kartu Stok Manual Gudang</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
         body {
-            font-family: 'Inter', sans-serif;
-            background-color: #f7f7f7;
-            padding-top: 5rem; /* Menambahkan padding untuk navbar fixed */
+            font-family: 'Poppins', sans-serif;
+            background-color: #f4f7fa;
+            padding-top: 5rem; 
         }
-        .btn-submit {
+        .form-container {
+            animation: slideInFromBottom 0.6s ease-out;
+        }
+        @keyframes slideInFromBottom {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .input-field, .select-field {
             transition: all 0.3s ease;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         }
-        .btn-submit:hover {
-            box-shadow: 0 8px 10px rgba(0, 0, 0, 0.2);
+        .input-field:focus, .select-field:focus {
+            border-color: #667eea;
+            box-shadow: 0 0 0 1px #667eea;
+        }
+        .btn-action {
+            transition: all 0.3s ease;
+        }
+        .btn-action:hover {
             transform: translateY(-2px);
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
         }
     </style>
 </head>
 <body>
 
-    <header class="fixed top-0 left-0 w-full bg-indigo-600 shadow-lg z-10">
+    <header class="fixed top-0 left-0 w-full bg-white shadow-lg z-10">
         <nav class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex items-center justify-between h-16">
                 <div class="flex items-center">
-                    <a href="dashboard.html" class="text-xl font-bold text-white tracking-wider">APP GUDANG</a>
+                    <a href="dashboard.html" class="text-2xl font-extrabold text-indigo-600 tracking-wider transition duration-300 hover:text-indigo-800">Gudang.app</a>
                 </div>
                 <div class="flex items-center space-x-4">
-                    <a href="dashboard.html" class="text-gray-200 hover:bg-indigo-500 hover:text-white px-3 py-2 rounded-md text-sm font-medium">Dashboard</a>
-                    <a href="input_stok.html" class="bg-indigo-500 text-white px-3 py-2 rounded-md text-sm font-medium" aria-current="page">Input Stok</a>
-                    <a href="fisik_fancing.html" class="text-gray-200 hover:bg-indigo-500 hover:text-white px-3 py-2 rounded-md text-sm font-medium">Fisik Fancing</a>
-                    <button onclick="logoutRedirect()" class="bg-red-500 hover:bg-red-600 text-white px-3 py-1.5 rounded-md text-sm font-medium transition duration-150">Logout</button>
+                    <a href="dashboard.html" class="text-gray-600 hover:bg-indigo-100 px-3 py-2 rounded-xl text-sm font-medium transition duration-200">Dashboard</a>
+                    <a href="input_stok.html" class="bg-indigo-600 text-white px-3 py-2 rounded-xl text-sm font-semibold shadow-md transition duration-200" aria-current="page">Input Stok</a>
+                    <a href="fisik_fancing.html" class="text-gray-600 hover:bg-indigo-100 px-3 py-2 rounded-xl text-sm font-medium transition duration-200">Fisik Fancing</a>
+                    <button onclick="logoutRedirect()" class="bg-red-500 hover:bg-red-600 text-white px-3 py-2 rounded-xl text-sm font-semibold transition duration-150 shadow-md">Logout</button>
                 </div>
             </div>
         </nav>
     </header>
 
-    <div class="max-w-xl mx-auto mb-10 bg-white p-6 md:p-10 rounded-xl shadow-2xl border-t-8 border-indigo-600">
-        <h1 class="text-3xl font-bold text-center text-gray-800 mb-2">Form Input Stok</h1>
-        <p class="text-center text-sm text-gray-500 mb-8">Input Cepat & Real-time via Google Form</p>
+    <div class="max-w-xl mx-auto mb-10 bg-white p-6 md:p-10 rounded-2xl shadow-2xl form-container">
+        <h1 class="text-3xl font-bold text-center text-gray-800 mb-2">📥 Form Input Stok</h1>
+        <p class="text-center text-sm text-gray-500 mb-8">Catat pergerakan stok barang Anda.</p>
 
-        <div id="statusMessage" class="hidden p-3 mb-4 rounded-lg text-sm transition-all duration-300"></div>
+        <div id="statusMessage" class="hidden p-4 mb-6 rounded-xl text-sm transition-all duration-300 shadow-md"></div>
         
         <form id="stockForm" action="#" method="POST">
-            <div class="mb-6">
-                <label for="jenisProduk" class="block text-sm font-medium text-gray-700 mb-2">Jenis Produk</label>
+            
+            <div class="mb-5">
+                <label for="jenisProduk" class="block text-sm font-semibold text-gray-700 mb-2">Jenis Produk</label>
                 <select id="jenisProduk" name="jenisProduk" required
-                    class="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:ring-indigo-500 focus:border-indigo-500 bg-gray-50 transition duration-150 ease-in-out">
+                    class="select-field w-full p-3 border border-gray-300 rounded-xl bg-white focus:ring-1">
                     <option value="" disabled selected>Pilih Jenis Produk</option>
                 </select>
             </div>
 
-            <div id="conditionalFilters" class="mb-6 hidden">
+            <div id="conditionalFilters" class="mb-5 hidden p-4 bg-indigo-50 rounded-xl border border-indigo-100">
                 <div id="locationInput" class="mb-4">
-                    <label for="lokasi" class="block text-sm font-medium text-gray-700 mb-2">Lokasi (Khusus PIPA GALV KOTAK)</label>
+                    <label for="lokasi" class="block text-sm font-semibold text-gray-700 mb-2">Lokasi (Khusus PIPA GALV KOTAK)</label>
                     <input type="text" id="lokasi" placeholder="Masukkan Kode/Nama Lokasi"
-                        class="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:ring-purple-500 focus:border-purple-500 transition duration-150 ease-in-out">
+                        class="input-field w-full p-3 border border-gray-300 rounded-xl focus:ring-1">
                 </div>
 
-                <label id="filterLabel" class="block text-sm font-medium text-gray-700 mb-2">Filter Nama Produk:</label>
-                <div id="filterButtons" class="flex flex-wrap gap-1">
-                </div>
+                <label id="filterLabel" class="block text-sm font-semibold text-gray-700 mb-3">Filter Nama Produk:</label>
+                <div id="filterButtons" class="flex flex-wrap gap-2">
+                    </div>
             </div>
 
-            <div class="mb-6">
-                <label for="namaProduk" class="block text-sm font-medium text-gray-700 mb-2">Nama Produk</label>
+            <div class="mb-5">
+                <label for="namaProduk" class="block text-sm font-semibold text-gray-700 mb-2">Nama Produk</label>
                 <select id="namaProduk" name="namaProduk" required
-                    class="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:ring-indigo-500 focus:border-indigo-500 bg-gray-50 transition duration-150 ease-in-out">
+                    class="select-field w-full p-3 border border-gray-300 rounded-xl bg-white focus:ring-1">
                     <option value="" disabled selected>Pilih Nama Produk</option>
                 </select>
             </div>
 
-            <div class="mb-6">
-                <label for="jumlah" class="block text-sm font-medium text-gray-700 mb-2">Jumlah (Masuk/Keluar)</label>
+            <div class="mb-5">
+                <label for="jumlah" class="block text-sm font-semibold text-gray-700 mb-2">Jumlah (Masuk/Keluar)</label>
                 <input type="number" id="jumlah" name="jumlah" required min="1" placeholder="Masukkan Jumlah Stok"
-                    class="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:ring-indigo-500 focus:border-indigo-500 transition duration-150 ease-in-out">
+                    class="input-field w-full p-3 border border-gray-300 rounded-xl focus:ring-1">
             </div>
 
             <div class="mb-8">
-                <label for="checker" class="block text-sm font-medium text-gray-700 mb-2">Checker</label>
+                <label for="checker" class="block text-sm font-semibold text-gray-700 mb-2">Checker</label>
                 <input type="text" id="checker" name="checker" required placeholder="Nama Checker"
-                    class="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:ring-indigo-500 focus:border-indigo-500 transition duration-150 ease-in-out">
+                    class="input-field w-full p-3 border border-gray-300 rounded-xl focus:ring-1">
             </div>
 
             <div class="flex flex-col sm:flex-row gap-4">
                 <button type="button" id="btnBarangMasuk" data-type="masuk"
-                    class="btn-submit w-full sm:w-1/2 bg-green-600 hover:bg-green-700 text-white font-semibold py-3 px-4 rounded-lg focus:outline-none focus:ring-4 focus:ring-green-500 focus:ring-opacity-50">
+                    class="btn-action w-full sm:w-1/2 bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-4 rounded-xl focus:ring-4 focus:ring-green-500/50">
                     <span id="loadingMasuk" class="hidden spinner-border spinner-border-sm mr-2"></span> Barang Masuk (IN)
                 </button>
                 <button type="button" id="btnBarangKeluar" data-type="keluar"
-                    class="btn-submit w-full sm:w-1/2 bg-red-600 hover:bg-red-700 text-white font-semibold py-3 px-4 rounded-lg focus:outline-none focus:ring-4 focus:ring-red-500 focus:ring-opacity-50">
+                    class="btn-action w-full sm:w-1/2 bg-red-600 hover:bg-red-700 text-white font-bold py-3 px-4 rounded-xl focus:ring-4 focus:ring-red-500/50">
                     <span id="loadingKeluar" class="hidden spinner-border spinner-border-sm mr-2"></span> Barang Keluar (OUT)
                 </button>
             </div>
 
             <p class="text-xs text-gray-400 mt-6 text-center">
-                *Form Hanya digunakan Untuk Keperluan Input barang masuk dan keluar gudang
+                *Pastikan data yang diinput sudah benar sebelum menekan tombol.
             </p>
         </form>
     </div>
@@ -123,40 +137,68 @@
         // --- End Session Check ---
 
         // --- Sisanya adalah kode JavaScript untuk Form Input ---
-        const PRODUCT_DATA = { /* ... (PRODUCT_DATA dari Kode 2) */
+        const PRODUCT_DATA = { /* ... (PRODUCT_DATA sama dengan kode sebelumnya) */
             "KAWAT BETON": {
                 form_url: "https://docs.google.com/forms/u/0/d/e/1FAIpQLScvETNjdJnC9ZiFSsgRx5zP2dit95j_0Y4NzyqccCRf-Sl47Q/formResponse",
-                entry: { nama_produk: "entry.566128663", masuk: "entry.969048917", keluar: "entry.1223821394", checker: "entry.843098471", lokasi: "entry.5555551" },
+                entry: { nama_produk: "entry.566128663", 
+                        masuk: "entry.969048917", 
+                        keluar: "entry.1223821394", 
+                        checker: "entry.843098471", 
+                        lokasi: "entry.5555551" },
                 products: [ "KAWAT 6 (ENAM)","KAWAT 8 (DELAPAN)","KAWAT 10 (SEPULUH)","KAWAT 12 (DUA BELAS)","KAWAT 4.7 X 12","KAWAT 8.4 X 12","KAWAT 22 ( DUA PULUH DUA ) ULIR","KAWAT 19 ( SEMBILAN BELAS ) ULIR","KAWAT 25 ( DUA PULUH LIMA ) ULIR","KAWAT 13 (TIGA BELAS) ULIR","KAWAT 7.1 X 12","KAWAT 16 (ENAM BELAS)","KAWAT 16 ( ENAM BELAS ) ULIR","KAWAT 14 (EMPAT BELAS)","KAWAT 11.4 X 12","KAWAT 10 ( SEPULUH ) ULIR" ]
             },
             "SEMEN": {
                 form_url: "https://docs.google.com/forms/u/0/d/e/1FAIpQLSfLiOefYM1lh94iVd2QhLqYrP7emz8XaNJfF1xaGQJefzBk5A/formResponse",
-                entry: { nama_produk: "entry.152178025", masuk: "entry.1621335854", keluar: "entry.741061137", checker: "entry.1328592234", lokasi: "entry.5555552" },
+                entry: { nama_produk: "entry.152178025", 
+                        masuk: "entry.1621335854", 
+                        keluar: "entry.741061137", 
+                        checker: "entry.1328592234", 
+                        lokasi: "entry.5555552" },
                 products: [ "SEMEN TIGA RODA 50 KG","SEMEN TONASA 50 KG","SEMEN PUTIH JAGUAR 40 KG","SB PEREKAT BATA RINGAN 40 KG" ]
             },
             "BWG - KAWAT DURI": {
                 form_url: "https://docs.google.com/forms/u/0/d/e/1FAIpQLSf5uS3Q2V-KBX7-X-KjTz6E/formResponse",
-                entry: { nama_produk: "entry.1111113", masuk: "entry.2222223", keluar: "entry.3333333", checker: "entry.4444443", lokasi: "entry.5555553" },
+                entry: { nama_produk: "entry.1111113", 
+                        masuk: "entry.2222223", 
+                        keluar: "entry.3333333", 
+                        checker: "entry.4444443", 
+                        lokasi: "entry.5555553" },
                 products: [ "BENDRAT PUTIH ROL (25 KG)", "KAWAT DURI (5 KG)", "KAWAT DURI (10 KG)" ]
             },
             "PIPA GALV KOTAK": {
                 form_url: "https://docs.google.com/forms/u/0/d/e/1FAIpQLSf6g4_4b5i1sFfQkQ6rT3Q2V-K_KjTz6E/formResponse",
-                entry: { nama_produk: "entry.6666664", masuk: "entry.7777774", keluar: "entry.8888884", checker: "entry.9999994", lokasi: "entry.561578500" },
+                entry: { nama_produk: "entry.6666664", 
+                        masuk: "entry.7777774", 
+                        keluar: "entry.8888884", 
+                        checker: "entry.9999994", 
+                        lokasi: "entry.561578500" },
                 products: [ "PIPA KOTAK GALV 1/2 X 1.2 MM", "PIPA KOTAK GALV 3/4 X 1.2 MM", "PIPA KOTAK GALV 1 X 1.2 MM" ]
             },
             "ATAP": {
                 form_url: "https://docs.google.com/forms/u/0/d/e/1FAIpQLSf7w7a-dE_zH_6iG7KjTz6E/formResponse",
-                entry: { nama_produk: "entry.1111115", masuk: "entry.2222225", keluar: "entry.3333335", checker: "entry.4444445", lokasi: "entry.5555555" },
+                entry: { nama_produk: "entry.1111115", 
+                        masuk: "entry.2222225", 
+                        keluar: "entry.3333335", 
+                        checker: "entry.4444445", 
+                        lokasi: "entry.5555555" },
                 products: [ "ATAP SENG GELOMBANG L 80", "ATAP SENG GELOMBANG L 90", "ATAP SENG GELOMBANG L 100" ]
             },
             "BAJA RINGAN": {
                 form_url: "https://docs.google.com/forms/u/0/d/e/1FAIpQLSf8x8a-dE_zH_6iG7KjTz6E/formResponse",
-                entry: { nama_produk: "entry.1111116", masuk: "entry.2222226", keluar: "entry.3333336", checker: "entry.4444446", lokasi: "entry.5555556" },
+                entry: { nama_produk: "entry.1111116",
+                        masuk: "entry.2222226", 
+                        keluar: "entry.3333336", 
+                        checker: "entry.4444446", 
+                        lokasi: "entry.5555556" },
                 products: [ "BAJA RINGAN C75.75", "BAJA RINGAN RENG R30" ]
             },
             "HOLO": {
                 form_url: "https://docs.google.com/forms/u/0/d/e/1FAIpQLSf9w9a-dE_zH_6iG7KjTz6E/formResponse",
-                entry: { nama_produk: "entry.1111117", masuk: "entry.2222227", keluar: "entry.3333337", checker: "entry.4444447", lokasi: "entry.5555557" },
+                entry: { nama_produk: "entry.1111117", 
+                        masuk: "entry.2222227", 
+                        keluar: "entry.3333337", 
+                        checker: "entry.4444447", 
+                        lokasi: "entry.5555557" },
                 products: [ "HOLO GALV 20X40X0,4", "HOLO GALV 40X40X0,4", "HOLO GALV 40X60X0,4" ]
             }
         };
@@ -165,6 +207,7 @@
         const namaProdukSelect = document.getElementById('namaProduk');
         const conditionalFiltersDiv = document.getElementById('conditionalFilters');
         const locationInput = document.getElementById('lokasi');
+        const locationInputContainer = document.getElementById('locationInput');
         const filterButtonsDiv = document.getElementById('filterButtons');
         const form = document.getElementById('stockForm');
         const statusMessage = document.getElementById('statusMessage');
@@ -173,6 +216,9 @@
         const loadingMasuk = document.getElementById('loadingMasuk');
         const loadingKeluar = document.getElementById('loadingKeluar');
         
+        // Simpan referensi tombol filter untuk reset
+        const filters = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"];
+
         function populateJenisProduk() {
             for (const jenis in PRODUCT_DATA) {
                 const option = document.createElement('option');
@@ -186,18 +232,26 @@
             namaProdukSelect.innerHTML = '<option value="" disabled selected>Pilih Nama Produk</option>';
             filterButtonsDiv.innerHTML = '';
             locationInput.value = ''; // Reset lokasi
+
+            // Tampilkan/Sembunyikan Filter dan Lokasi
+            const isPipaGalv = selectedJenis === "PIPA GALV KOTAK";
+            const needsFilterButtons = selectedJenis && !isPipaGalv;
+
+            locationInputContainer.style.display = isPipaGalv ? 'block' : 'none';
+            document.getElementById('lokasi').required = isPipaGalv;
             
-            // Logika untuk menampilkan filter nama produk berdasarkan huruf depan
-            if (selectedJenis && PRODUCT_DATA[selectedJenis] && selectedJenis !== "PIPA GALV KOTAK") {
-                createFilterButtons(selectedJenis);
-            } else if (selectedJenis === "PIPA GALV KOTAK") {
-                // Untuk PIPA GALV KOTAK, hanya tampilkan input lokasi dan biarkan filter kosong
+            if (needsFilterButtons) {
                 conditionalFiltersDiv.classList.remove('hidden');
+                document.getElementById('filterLabel').classList.remove('hidden');
+                createFilterButtons(selectedJenis);
+            } else if (isPipaGalv) {
+                conditionalFiltersDiv.classList.remove('hidden');
+                document.getElementById('filterLabel').classList.add('hidden');
             } else {
-                 conditionalFiltersDiv.classList.add('hidden');
+                conditionalFiltersDiv.classList.add('hidden');
             }
 
-            // Tampilkan semua produk untuk jenis yang dipilih (sebelum difilter oleh tombol huruf)
+            // Tampilkan semua produk
             if (selectedJenis && PRODUCT_DATA[selectedJenis] && PRODUCT_DATA[selectedJenis].products) {
                 PRODUCT_DATA[selectedJenis].products.forEach(product => {
                     const option = document.createElement('option');
@@ -207,26 +261,17 @@
                 });
             }
             
-            // Sembunyikan atau tampilkan input Lokasi
-            const isPipaGalv = selectedJenis === "PIPA GALV KOTAK";
-            document.getElementById('locationInput').style.display = isPipaGalv ? 'block' : 'none';
-            document.getElementById('lokasi').required = isPipaGalv;
-            
             if (!isPipaGalv) {
-                locationInput.value = 'N/A'; // Set default jika tidak diperlukan
+                locationInput.value = 'N/A';
             }
         }
 
         function createFilterButtons(selectedJenis) {
             filterButtonsDiv.innerHTML = '';
-            const filters = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"];
             
-            conditionalFiltersDiv.classList.remove('hidden');
-            document.getElementById('filterLabel').classList.remove('hidden');
-
             const allButton = document.createElement('button');
             allButton.textContent = 'Semua';
-            allButton.classList.add('px-3', 'py-1', 'text-sm', 'bg-indigo-500', 'text-white', 'rounded', 'hover:bg-indigo-600', 'transition', 'active-filter', 'mr-1', 'mb-1');
+            allButton.classList.add('px-3', 'py-1', 'text-sm', 'bg-indigo-600', 'text-white', 'rounded-lg', 'hover:bg-indigo-700', 'transition', 'active-filter');
             allButton.addEventListener('click', (e) => {
                 e.preventDefault();
                 filterByInitial('');
@@ -236,7 +281,7 @@
             filters.forEach(initial => {
                 const button = document.createElement('button');
                 button.textContent = initial;
-                button.classList.add('px-3', 'py-1', 'text-sm', 'bg-gray-200', 'text-gray-700', 'rounded', 'hover:bg-gray-300', 'transition', 'mr-1', 'mb-1');
+                button.classList.add('px-3', 'py-1', 'text-sm', 'bg-gray-200', 'text-gray-700', 'rounded-lg', 'hover:bg-indigo-100', 'transition');
                 button.addEventListener('click', (e) => {
                     e.preventDefault();
                     filterByInitial(initial);
@@ -262,7 +307,7 @@
 
             // Update active state of buttons
             document.querySelectorAll('#filterButtons button').forEach(btn => {
-                btn.classList.remove('bg-indigo-500', 'text-white', 'active-filter');
+                btn.classList.remove('bg-indigo-600', 'text-white', 'active-filter');
                 btn.classList.add('bg-gray-200', 'text-gray-700');
             });
             
@@ -272,33 +317,36 @@
                 
             if (targetButton) {
                 targetButton.classList.remove('bg-gray-200', 'text-gray-700');
-                targetButton.classList.add('bg-indigo-500', 'text-white', 'active-filter');
+                targetButton.classList.add('bg-indigo-600', 'text-white', 'active-filter');
             }
         }
 
         function showStatus(message, isSuccess = true) {
             statusMessage.textContent = message;
-            statusMessage.classList.remove('hidden', 'bg-green-100', 'text-green-700', 'bg-red-100', 'text-red-700');
+            statusMessage.classList.remove('hidden', 'bg-green-100', 'text-green-700', 'bg-red-100', 'text-red-700', 'animate-pulse');
             if (isSuccess) {
                 statusMessage.classList.add('bg-green-100', 'text-green-700');
             } else {
-                statusMessage.classList.add('bg-red-100', 'text-red-700');
+                statusMessage.classList.add('bg-red-100', 'text-red-700', 'animate-pulse');
             }
+            statusMessage.classList.remove('hidden');
             setTimeout(() => statusMessage.classList.add('hidden'), 5000);
         }
 
         function setLoading(isLoading, type) {
             const button = type === 'masuk' ? btnMasuk : btnKeluar;
             const loadingSpan = type === 'masuk' ? loadingMasuk : loadingKeluar;
+            const originalText = `Barang ${type === 'masuk' ? 'Masuk (IN)' : 'Keluar (OUT)'}`;
+            
             button.disabled = isLoading;
             if (isLoading) {
                 loadingSpan.classList.remove('hidden');
-                button.classList.add('opacity-50', 'cursor-not-allowed');
-                button.textContent = 'Memproses...';
+                button.classList.add('opacity-70', 'cursor-not-allowed');
+                button.innerHTML = `<div class="loader-icon w-4 h-4 rounded-full border-2 border-white/50 border-t-white inline-block mr-2 animate-spin"></div> Memproses...`;
             } else {
                 loadingSpan.classList.add('hidden');
-                button.classList.remove('opacity-50', 'cursor-not-allowed');
-                button.textContent = `Barang ${type === 'masuk' ? 'Masuk (IN)' : 'Keluar (OUT)'}`;
+                button.classList.remove('opacity-70', 'cursor-not-allowed');
+                button.innerHTML = originalText;
             }
         }
         
@@ -314,7 +362,6 @@
                 return;
             }
 
-            // Jika bukan PIPA GALV KOTAK, pastikan lokasi tidak dikirim atau dikirim sebagai default 'N/A'
             if (jenisProduk !== "PIPA GALV KOTAK") {
                 lokasi = 'N/A'; 
             }
@@ -332,7 +379,7 @@
             }
             formData.append(config.entry.nama_produk, namaProduk);
             formData.append(config.entry.checker, checker);
-            if (config.entry.lokasi) { // Hanya tambahkan entry lokasi jika ada di config
+            if (config.entry.lokasi) { 
                 formData.append(config.entry.lokasi, lokasi);
             }
 
@@ -343,18 +390,21 @@
                     mode: 'no-cors'
                 });
 
-                // Karena mode 'no-cors', kita hanya bisa mengandalkan response.type === 'opaque' (berhasil terkirim)
-                // Jika URL form dan entry sudah benar, biasanya pengiriman sukses.
                 if (response.type === 'opaque' || response.ok) {
-                    showStatus('Data berhasil dikirim!', true);
+                    showStatus('Data berhasil dikirim! ✅', true);
+                    // Reset fields yang spesifik
                     document.getElementById('jumlah').value = '';
-                    document.getElementById('lokasi').value = jenisProduk === "PIPA GALV KOTAK" ? '' : 'N/A'; 
+                    if (jenisProduk === "PIPA GALV KOTAK") {
+                        document.getElementById('lokasi').value = '';
+                    } else {
+                        document.getElementById('lokasi').value = 'N/A';
+                    }
                 } else {
                     throw new Error('Gagal mengirim data. Silakan coba lagi.');
                 }
             } catch (error) {
                 console.error('Error:', error);
-                showStatus('Terjadi kesalahan saat mengirim data. Cek koneksi Anda.', false);
+                showStatus('Terjadi kesalahan saat mengirim data. Cek koneksi Anda. ❌', false);
             } finally {
                 setLoading(false, type);
             }
@@ -367,7 +417,6 @@
         btnMasuk.addEventListener('click', () => submitForm('masuk'));
         btnKeluar.addEventListener('click', () => submitForm('keluar'));
         
-        // Panggil saat halaman pertama kali dimuat
         document.addEventListener('DOMContentLoaded', populateJenisProduk);
     </script>
 </body>
