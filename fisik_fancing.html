@@ -3,155 +3,157 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Fisik Fencing (Halaman 3)</title>
+  <title>Fisik Fencing Gudang</title>
   <script src="https://cdn.tailwindcss.com"></script>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&display=swap" rel="stylesheet">
   <style>
     body {
-      font-family: 'Inter', sans-serif;
-      background: #f1f5f9;
-      margin: 0;
-      padding-top: 5rem; /* Padding untuk navbar fixed */
+      font-family: 'Poppins', sans-serif;
+      background: #f4f7fa;
+      padding-top: 5rem;
+       animation: fadeIn 0.8s ease-out;
     }
+    @keyframes fadeIn {
+        from { opacity: 0; }
+        to { opacity: 1; }
+    }
     .container {
-      max-width: 800px;
+      max-width: 90%;
       margin: 30px auto 40px;
       background: #fff;
-      border-radius: 12px;
+      border-radius: 16px;
       padding: 24px;
-      box-shadow: 0 2px 9px rgba(0,0,0,0.06);
+      box-shadow: 0 10px 20px rgba(0,0,0,0.05);
     }
-    h2 {
-      margin-top: 0;
-      color: #1e3c72;
-      text-align: center;
-      font-weight: 700;
-    }
+    @media (min-width: 768px) {
+        .container {
+            max-width: 1000px;
+        }
+    }
     .lokasi-btn-wrap {
       display: flex;
       justify-content: center;
-      gap: 10px;
-      margin: 0 auto 16px;
+      gap: 1rem;
+      margin: 0 auto 1.5rem;
+      flex-wrap: wrap;
     }
     .lokasi-btn {
-      padding: 10px 20px;
-      background: #e4e9f7;
-      border: 1px solid #d4d7dd;
-      color: #1e3c72;
-      border-radius: 6px;
+      padding: 10px 24px;
+      background: #eef2ff;
+      border: none;
+      color: #4b6cb7;
+      border-radius: 10px;
       cursor: pointer;
-      font-weight: 500;
-      transition: all 0.2s;
+      font-weight: 600;
+      transition: all 0.3s ease;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.05);
     }
     .lokasi-btn.active {
-      background: #4b6cb7;
+      background: #4f46e5;
       color: #fff;
-      border-color: #4b6cb7;
+      box-shadow: 0 4px 8px rgba(79, 70, 229, 0.4);
     }
     .lokasi-btn:not(.active):hover {
-      background: #d4e0fa;
+      background: #d3d9f9;
     }
     .search-box {
-      width: 100%;
       padding: 12px;
-      font-size: 1.1em;
-      border: 2px solid #d4d7dd;
-      border-radius: 8px;
-      margin-bottom: 16px;
+      font-size: 1em;
+      border: 2px solid #e2e8f0;
+      border-radius: 10px;
+      margin-bottom: 20px;
       box-sizing: border-box;
+      transition: border-color 0.3s;
     }
+    .search-box:focus {
+        border-color: #4f46e5;
+        box-shadow: 0 0 0 1px #4f46e5;
+    }
     .scroll-table-container {
-      margin-top: 8px;
       overflow: auto;
-      max-height: 66vh;
-      border: 1px solid #d1d8e4;
-      border-radius: 8px;
-      background: #fafbff;
+      max-height: 60vh;
+      border-radius: 10px;
+      background: #ffffff;
+      box-shadow: inset 0 0 8px rgba(0,0,0,0.05);
     }
     #data-table {
       width: 100%;
-      border-collapse: collapse;
-      background: #fff;
+      border-collapse: separate;
+      border-spacing: 0;
     }
     #data-table th, #data-table td {
-      padding: 10px 12px;
-      border: 1px solid #d1d8e4;
+      padding: 12px 15px;
       text-align: left;
-      font-size: 1em;
-      background: inherit;
+      font-size: 0.95em;
+      border-bottom: 1px solid #e2e8f0;
     }
     #data-table th {
-      background: #e4e9f7;
-      color: #1e3c72;
-      font-weight: 600;
+      background: #eef2ff;
+      color: #374151;
+      font-weight: 700;
       position: sticky;
       top: 0;
+      z-index: 5;
     }
-    #data-table tr:hover {
-      background: #f4f8fa;
+    #data-table tbody tr:hover {
+      background: #f9fafb;
+      transform: scale(1.005);
+      transition: background 0.2s, transform 0.2s;
     }
     #data-table tbody tr:nth-child(even) {
-      background: #f7f9fc;
+      background: #ffffff;
+    }
+    #data-table tbody tr:nth-child(odd) {
+      background: #fcfdfe;
     }
     td.empty {
       font-style: italic;
-      color: #718096;
+      color: #9ca3af;
       text-align: center;
-      background: #fff;
-    }
-    @media (max-width: 600px) {
-      .container {
-        padding: 8px;
-      }
-      #data-table th, #data-table td {
-        padding: 8px 10px;
-        font-size: .96em;
-      }
-      .lokasi-btn {
-        padding: 8px 14px;
-        font-size: 0.92em;
-      }
+      padding: 30px;
     }
   </style>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
 </head>
 <body>
 
-    <header class="fixed top-0 left-0 w-full bg-indigo-600 shadow-lg z-10">
+    <header class="fixed top-0 left-0 w-full bg-white shadow-lg z-10">
         <nav class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex items-center justify-between h-16">
                 <div class="flex items-center">
-                    <a href="dashboard.html" class="text-xl font-bold text-white tracking-wider">APP GUDANG</a>
+                    <a href="dashboard.html" class="text-2xl font-extrabold text-indigo-600 tracking-wider transition duration-300 hover:text-indigo-800">Gudang.app</a>
                 </div>
                 <div class="flex items-center space-x-4">
-                    <a href="dashboard.html" class="text-gray-200 hover:bg-indigo-500 hover:text-white px-3 py-2 rounded-md text-sm font-medium">Dashboard</a>
-                    <a href="input_stok.html" class="text-gray-200 hover:bg-indigo-500 hover:text-white px-3 py-2 rounded-md text-sm font-medium">Input Stok</a>
-                    <a href="fisik_fancing.html" class="bg-indigo-500 text-white px-3 py-2 rounded-md text-sm font-medium" aria-current="page">Fisik Fancing</a>
-                    <button onclick="logoutRedirect()" class="bg-red-500 hover:bg-red-600 text-white px-3 py-1.5 rounded-md text-sm font-medium transition duration-150">Logout</button>
+                    <a href="dashboard.html" class="text-gray-600 hover:bg-indigo-100 px-3 py-2 rounded-xl text-sm font-medium transition duration-200">Dashboard</a>
+                    <a href="input_stok.html" class="text-gray-600 hover:bg-indigo-100 px-3 py-2 rounded-xl text-sm font-medium transition duration-200">Input Stok</a>
+                    <a href="fisik_fancing.html" class="bg-indigo-600 text-white px-3 py-2 rounded-xl text-sm font-semibold shadow-md transition duration-200" aria-current="page">Fisik Fancing</a>
+                    <button onclick="logoutRedirect()" class="bg-red-500 hover:bg-red-600 text-white px-3 py-2 rounded-xl text-sm font-semibold transition duration-150 shadow-md">Logout</button>
                 </div>
             </div>
         </nav>
     </header>
 
   <div class="container">
-    <h2>Fisik Fencing</h2>
+    <h1 class="text-3xl font-bold text-center text-gray-800 mb-2">📋 Fisik Fencing Gudang</h1>
+    <p class="text-center text-gray-500 mb-8">Lihat data stok aktual per lokasi.</p>
+    
     <div class="lokasi-btn-wrap">
       <button class="lokasi-btn" id="g5000-btn">Gudang G5000</button>
       <button class="lokasi-btn" id="gm-btn">Gudang GM</button>
     </div>
-    <input type="text" class="search-box" id="search" placeholder="Cari berdasarkan Nama Produk atau Barcode..." autocomplete="off"/>
+    <input type="text" class="search-box w-full" id="search" placeholder="🔍 Cari Nama Produk atau Barcode..." autocomplete="off"/>
     <div class="scroll-table-container">
       <table id="data-table">
         <thead>
           <tr>
-            <th>Nama Produk</th>
-            <th>Barcode</th>
-            <th>Lokasi</th>
-            <th>Fisik</th>
+            <th class="w-2/5">Nama Produk</th>
+            <th class="w-1/5">Barcode</th>
+            <th class="w-1/5">Lokasi</th>
+            <th class="w-1/5">Fisik (Stok)</th>
           </tr>
         </thead>
         <tbody>
-          <tr><td colspan="4" class="empty">Silakan pilih gudang terlebih dahulu.</td></tr>
+          <tr><td colspan="4" class="empty">👆 Silakan pilih gudang di atas.</td></tr>
         </tbody>
       </table>
     </div>
@@ -171,7 +173,7 @@
   document.addEventListener('DOMContentLoaded', checkSessionAccess);
   // --- End Session Check ---
 
-  // ===== KONFIGURASI LINK CSV =====
+  // ===== KONFIGURASI LINK CSV (Ganti dengan link Anda yang sebenarnya) =====
   const CSV_URLS = {
     "G5000": "https://docs.google.com/spreadsheets/d/e/2PACX-1vRmMBbi9lLQweM1ZFNY3vu9KxoYECoGAmUVPqTy_9oELLV5HKLiEbO5TCHEdyndsZKKbPnzV7NRuOm6/pub?output=csv",
     "GM": "https://docs.google.com/spreadsheets/d/e/2PACX-1vSg028wvK1zQ_E6oo5Y3bZYwbbukwI5D_C2vd_dAyChSHWAUnvta-yz9mPY9sy5gqXQ0Thhgd-6MSlo/pub?output=csv"
@@ -186,31 +188,15 @@
   function renderTable(data) {
     const tbody = document.querySelector('#data-table tbody');
     if (!data || data.length === 0) {
-      tbody.innerHTML = '<tr><td colspan="4" class="empty">Tidak ada data ditemukan.</td></tr>';
+      tbody.innerHTML = '<tr><td colspan="4" class="empty">❌ Tidak ada data ditemukan.</td></tr>';
       return;
     }
     tbody.innerHTML = data.map(barang => `
-      <tr>
-        <td>${
-          barang.nama === undefined || barang.nama === null || barang.nama === "" ?
-            '' :
-            barang.nama
-        }</td>
-        <td>${
-          barang.barcode === undefined || barang.barcode === null || barang.barcode === "" ?
-            '' :
-            barang.barcode
-        }</td>
-        <td>${
-          barang.lokasi === undefined || barang.lokasi === null || barang.lokasi <0 ?
-            '' :
-            barang.lokasi
-        }</td>
-        <td>${
-          barang.fisik === undefined || barang.fisik === null || barang.fisik <0 ?
-            '' :
-            barang.fisik
-        }</td>
+      <tr class="animate-fadeIn">
+        <td class="font-medium text-gray-700">${barang.nama || '-'}</td>
+        <td>${barang.barcode || '-'}</td>
+        <td class="text-indigo-600 font-semibold">${barang.lokasi || '-'}</td>
+        <td class="text-green-600 font-extrabold">${barang.fisik || '0'}</td>
       </tr>
     `).join('');
   }
@@ -219,31 +205,33 @@
   function loadData(lokasi) {
     activeLokasi = lokasi;
     const tbody = document.querySelector('#data-table tbody');
-    tbody.innerHTML = '<tr><td colspan="4" class="empty">Memuat data...</td></tr>';
+    tbody.innerHTML = '<tr><td colspan="4" class="empty">⏳ Memuat data, mohon tunggu...</td></tr>';
     document.querySelectorAll('.lokasi-btn').forEach(btn => btn.classList.remove('active'));
     document.querySelector(`#${lokasi.toLowerCase()}-btn`).classList.add('active');
+    
     Papa.parse(CSV_URLS[lokasi], {
       download: true,
       header: true,
       skipEmptyLines: true,
       dynamicTyping: true,
       complete: (results) => {
+        // Filter data agar hanya kolom yang relevan (kolom 5, 6, 7, 8) yang diambil, 
+        // dan pastikan setidaknya satu dari kolom tersebut tidak kosong untuk baris data yang valid.
+        const keys = Object.keys(results.data[0] || {});
         dataBarang = results.data
-          .filter(row => row[Object.keys(row)[5]] || row[Object.keys(row)[6]] || row[Object.keys(row)[7]] || row[Object.keys(row)[8]])
+          .filter(row => keys.slice(5, 9).some(key => row[key]))
           .map(row => ({
-            nama: row[Object.keys(row)[5]],
-            barcode: row[Object.keys(row)[6]] ,
-            lokasi: row[Object.keys(row)[7]] ,
-            fisik: row[Object.keys(row)[8]]
+            nama: row[keys[5]],
+            barcode: row[keys[6]] ,
+            lokasi: row[keys[7]] ,
+            fisik: row[keys[8]]
         }));
-        dataBarang = dataBarang.filter(row => (
-          row.nama !== undefined || row.barcode !== undefined || row.lokasi !== undefined || row.fisik !== undefined
-        ));
+        
         applyFilter();
       },
       error: (err) => {
         document.querySelector('#data-table tbody').innerHTML =
-          '<tr><td colspan="4" class="empty" style="color:red;">Gagal memuat data.</td></tr>';
+          '<tr><td colspan="4" class="empty" style="color:red;">❌ Gagal memuat data. Cek link Google Sheet.</td></tr>';
         console.error(err);
       }
     });
@@ -260,6 +248,7 @@
         (b.nama && b.nama.toString().toLowerCase().includes(searchKeyword.toLowerCase())) ||
         (b.barcode && b.barcode.toString().toLowerCase().includes(searchKeyword.toLowerCase()))
       )) : dataBarang;
+    
     renderTable(filtered);
   }
 
